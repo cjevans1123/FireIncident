@@ -2,6 +2,9 @@ var map, heatmap;
 var vHeatSource = '';
 var vFireStation = '';
 var defaultMap = 'heatmap'
+var address = [];
+var contentLoss = [];
+var propertyValue = [];
 //var URL = "https://data.greensboro-nc.gov/resource/p7u9-tyw6.json?NFIRS_IncidentType=111";
 
  var mapsApiLoaded = false;
@@ -92,23 +95,6 @@ function initMap() {
         'rgba(255, 0, 0, 1)'
     ]
 
-
-    /*var gradient = [
-        'rgba(255, 0, 0, 1)',
-        'rgba(191, 0, 31, 1)',
-        'rgba(127, 0, 63, 1)',
-        'rgba(63, 0, 91, 1)',
-        'rgba(0, 0, 127, 1)',
-        'rgba(0, 0, 159, 1)',
-        'rgba(0, 0, 191, 1)',
-        'rgba(0, 0, 223, 1)',
-        'rgba(0, 0, 255, 1)',
-        'rgba(0, 63, 255, 1)',
-        'rgba(0, 127, 255, 1)',
-        'rgba(0, 191, 255, 1)',
-        'rgba(0, 255, 255, 1)',
-        'rgba(0, 255, 255, 0)'
-  ]*/
   heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
 }
 google.maps.event.addDomListener(window, 'load', initMap);
@@ -171,40 +157,30 @@ function getPoints() {
     if (vFireStation) {
         URL = URL+'&station='+ vFireStation;
     }
-    // alert(URL);
 
-
-         $.ajax({
-              // url: "https://data.greensboro-nc.gov/resource/p7u9-tyw6.json?NFIRS_IncidentType=111&incidentnumber=10-1226142",
-              
-              // All
-              //url: "https://data.greensboro-nc.gov/resource/p7u9-tyw6.json?NFIRS_IncidentType=111&heatsource=cigarette",
-              
-              url: URL,
-              type: "GET",
-              dataType: "json",
-              async: false,
-          }).done (function (data) {
-             var vGP = [];
-             vResponse = data;
-            /*for(var i = 0; i < data.length; i++) {
-                if(data[i].fulladdress && data[i].fulladdress.latitude && data[i].fulladdress.longitude) {
-                    console.log(data[i].fulladdress.latitude);
-                    console.log(data[i].fulladdress.longitude);
-                    vGP[i] = new google.maps.LatLng(data[i].fulladdress.latitude, data[i].fulladdress.longitude) +","; 
-                }
-            }     */      
-} );
-
-
-    for(var i = 0; i < vResponse.length; i++) {
-        if(vResponse[i].fulladdress && vResponse[i].fulladdress.latitude && vResponse[i].fulladdress.longitude) {
-        googlePoints[i] = new google.maps.LatLng(parseFloat(vResponse[i].fulladdress.latitude), parseFloat(vResponse[i].fulladdress.longitude));
-    }
-    }
+    $.ajax({
+          url: URL,
+          type: "GET",
+          dataType: "json",
+          async: false,
+      }).done (function (data) {
+         vResponse = data;    
+    } );
 
     
-    //URL = "https://data.greensboro-nc.gov/resource/p7u9-tyw6.json?NFIRS_IncidentType=111";
+    for(var i = 0; i < vResponse.length; i++) {
+        if(vResponse[i].fulladdress && vResponse[i].fulladdress.latitude && vResponse[i].fulladdress.longitude) {
+            if( defaultMap == 'heatmap') {
+                googlePoints[i] = new google.maps.LatLng(parseFloat(vResponse[i].fulladdress.latitude), parseFloat(vResponse[i].fulladdress.longitude));
+            } else {
+                googlePoints[i] = new google.maps.LatLng(parseFloat(vResponse[i].fulladdress.latitude), parseFloat(vResponse[i].fulladdress.longitude));
+                address[i] = vResponse[i].fulladdress;
+                contentLoss[i] = vResponse[i].contentloss;
+                propertyValue[i] = vResponse[i].propertyvalue;
+            }
+        }
+    }
+    
     return googlePoints;
 }
 
@@ -212,10 +188,13 @@ function getPoints() {
 function plotIncidentMarkers() {
     var myLatLng = { lat: 36.071600, lng: -79.792189 };
     var vPoints = [];
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+    var vAddress = '';
+    var vContentLoss = 0;
+    var vPropertyValue = 0;
 
     vPoints = getPoints();
-
-    var marker, i;
 
      var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 11,
@@ -225,21 +204,42 @@ function plotIncidentMarkers() {
 
     var marker = new google.maps.Marker({
         position: myLatLng,
-        map: map,
-        title: 'Hello World!'
+        map: map
+        //icon: 'http://localhost:8100/img/marker.png'
     });     
 
     for (i = 0; i < vPoints.length; i++) {  
         marker = new google.maps.Marker({
              position: vPoints[i],
-             map: map
+             map: map,
+             icon: '/img/marker.png'
         });
 
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-             return function() {
-                 infowindow.setContent(locations[i][0]);
-                 infowindow.open(map, marker);
-             }
-        })(marker, i));
+        if (address[i] && address[i].human_address) {
+            vAddress = address[i].human_address;
+        } else {
+            vAddress = 'No address found';
+        }
+
+        if (contentLoss[i] != 0) {
+            vContentLoss = contentLoss[i];
+        } else {
+            vContentLoss = 'Content loss value is 0';
+        }
+
+       if (propertyValue[i] != 0) {
+            vPropertyValue = propertyValue[i];
+        } else {
+            vPropertyValue = 'Property Value is 0';
+        }
+
+        makeInfoWindowEvent(map, infowindow, vAddress, marker);
     }
+}
+
+function makeInfoWindowEvent(map, infowindow, contentString, marker) {
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.setContent(contentString);
+    infowindow.open(map, marker);
+  });
 }
