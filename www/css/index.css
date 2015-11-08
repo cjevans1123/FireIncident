@@ -260,3 +260,7 @@ h2 {
 .demo-wrapper .panel.left .report a:before { 
     content: '\f0e0';
 }
+
+#popup {
+    padding: 10px 10px 10px 10px;
+}

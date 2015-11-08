@@ -28,7 +28,7 @@
     <icon density="xhdpi" src="resources\android\icon\drawable-xhdpi-icon.png" />
     <icon density="xxhdpi" src="resources\android\icon\drawable-xxhdpi-icon.png" />
     <icon density="xxxhdpi" src="resources\android\icon\drawable-xxxhdpi-icon.png" />
-    <name>WOF GSO</name>
+    <name>GSO Flame</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>

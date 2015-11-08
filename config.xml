@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="org.greensboronc.incidentviewer" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>WOF GSO</name>
+  <name>GSO Flame</name>
   <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>

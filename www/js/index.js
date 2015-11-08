@@ -1,15 +1,13 @@
 var map, heatmap;
 var vHeatSource = '';
+var vCategory = '';
 var vFireStation = '';
 var defaultMap = 'heatmap'
 var address = [];
 var contentLoss = [];
 var propertyValue = [];
-//var URL = "https://data.greensboro-nc.gov/resource/p7u9-tyw6.json?NFIRS_IncidentType=111";
-
- var mapsApiLoaded = false;
+var mapsApiLoaded = false;
 var locationsArray = [];
-// var googleMapsApiUrl = "https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg&callback=initialize";
 var googleMapsApiUrl = "https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg&signed_in=true&libraries=visualization&callback=initMap";
 var app = {
     // Application Constructor
@@ -46,29 +44,25 @@ var app = {
 
  //app.initialize();
 
-// Initial map works!!
-// function initMap() {
-//     var mapCanvas = document.getElementById('map');
-//     var mapOptions = {
-//       center: new google.maps.LatLng(36.071600, -79.792189),
-//       zoom: 11,
-//       mapTypeId: google.maps.MapTypeId.ROADMAP
-//     }
-//     var map = new google.maps.Map(mapCanvas, mapOptions);
-// }
-// google.maps.event.addDomListener(window, 'load', initMap);
-
+// jquery addach events to elements in the DOM
 $("#selectIncidentType").change(setIncidentType);
 $("#stationSelect").change(setStationArea);
+$("#selectCategory").change(setCategory);
 $("#heatMap").click(setDefaultMap);
 $("#marker").click(setDefaultMap);
 
+var popUpDiv = $("#popup");
+                $(popUpDiv).on("touchstart",function(){
+                        $(this).popup("close");
+                        pinchZoomPopupLoaded = true;
+                  }); 
+
+
+// Initialize the google map and zoom to Greensboro
 function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
         zoom: 11,
         center: { lat: 36.071600, lng: -79.792189 },  //36.071600, -79.792189
-        //center: { lat: 37.800738, lng:  -122.434598 },
-
         mapTypeId: google.maps.MapTypeId.SATELLITE
     });
 
@@ -77,6 +71,7 @@ function initMap() {
         map: map
     });
 
+    // Heatmap Gradient
     heatmap.set('radius', heatmap.get('radius') ? null : 30);
     var gradient = [
         'rgba(0, 255, 255, 0)',
@@ -109,26 +104,27 @@ function setIncidentType() {
     } else {
          vHeatSource = this.value;
     }
-    //var url = "https://data.greensboro-nc.gov/resource/p7u9-tyw6.json?NFIRS_IncidentType=111" + this.value;
-    //URL = URL + this.value;
+    callDefaultMap();
+}
+
+function setCategory() {
+    vCategory = this.value;
     callDefaultMap();
 }
 
 function setStationArea() {
     vFireStation = this.value;
-    //URL = URL + this.value;
-   // alert(URL);
     callDefaultMap();
 }
 
-
+// Change the radius of the heatmap points
 function changeRadius() {
   heatmap.set('radius', heatmap.get('radius') ? null : 10);
 }
 
+// Set opacity of the heat map
 function changeOpacity() {
   heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
-  //  heatmap.set('opacity', heatmap.get('opacity') ? null : 0.8);
 }
 
 function setDefaultMap () {
@@ -136,6 +132,7 @@ function setDefaultMap () {
     callDefaultMap();
 }
 
+// Either create a heatmap or marker map based on the defaultMap variable
 function callDefaultMap() {
     if (defaultMap == 'marker') {
         plotIncidentMarkers();
@@ -144,20 +141,27 @@ function callDefaultMap() {
     }
 }
 
+// Gets the JSON data to create the points on the google map
 function getPoints() {
 
     var googlePoints = [];
     var vResponse;
-    var URL = "https://data.greensboro-nc.gov/resource/p7u9-tyw6.json?NFIRS_IncidentType=111"; 
+    var URL = "https://data.greensboro-nc.gov/resource/p7u9-tyw6.json?naturecode=STRUC"; 
 
     if (vHeatSource) {
         URL = URL+ vHeatSource;
+    }
+
+    if (vCategory) {
+        URL = URL+ vCategory;
     }
 
     if (vFireStation) {
         URL = URL+'&station='+ vFireStation;
     }
 
+    // Ajax call to retrieve json data from Greensboro's Open data portal
+    // The soda API is used to access the data. (by using a restful URL)
     $.ajax({
           url: URL,
           type: "GET",
@@ -167,7 +171,8 @@ function getPoints() {
          vResponse = data;    
     } );
 
-    
+    // Loop through the json data returned from the Ajax call
+    // depending on the map type either create a heatmap or marker map of fire incidents
     for(var i = 0; i < vResponse.length; i++) {
         if(vResponse[i].fulladdress && vResponse[i].fulladdress.latitude && vResponse[i].fulladdress.longitude) {
             if( defaultMap == 'heatmap') {
@@ -196,6 +201,7 @@ function plotIncidentMarkers() {
 
     vPoints = getPoints();
 
+    // Create the map object in the map div
      var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 11,
         center: myLatLng,
@@ -205,7 +211,6 @@ function plotIncidentMarkers() {
     var marker = new google.maps.Marker({
         position: myLatLng,
         map: map
-        //icon: 'http://localhost:8100/img/marker.png'
     });     
 
     for (i = 0; i < vPoints.length; i++) {  
@@ -215,6 +220,7 @@ function plotIncidentMarkers() {
              icon: '/img/marker.png'
         });
 
+        // Get the JSON data and format it to place in the marker
         if (address[i] && address[i].human_address) {
             vAddress = address[i].human_address;
         } else {
@@ -242,14 +248,15 @@ function plotIncidentMarkers() {
         // var loss[0] = vContentLoss.split(':');
         // console.log(loss[0]);
 
-        displayText +=  adr[1] + "Content Loss: " + '$' + vContentLoss + '<br>';
-        displayText +=  'Property Value: ' + '$' + vPropertyValue + '</span><br>';
+        displayText +=  adr[1] + "Content Loss: " + vContentLoss + '<br>';
+        displayText +=  'Property Value: ' + vPropertyValue + '</span><br>';
 
         //makeInfoWindowEvent(map, infowindow, vAddress + " <b>test</b>", marker);
         makeInfoWindowEvent(map, infowindow, displayText, marker);
     }
 }
 
+// Create and add the info window in the google map and adds the click event to open the markers
 function makeInfoWindowEvent(map, infowindow, contentString, marker) {
   google.maps.event.addListener(marker, 'click', function() {
     infowindow.setContent(contentString);

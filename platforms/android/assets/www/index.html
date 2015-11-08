@@ -56,14 +56,7 @@
         <script type="text/javascript" src="js/jquery.hammer.min.js"></script>        
         <script type="text/javascript" src="js/modernizr.min.js"></script> 
         <script type="text/javascript" src="js/spin.min.js"></script>
-<!--         // <script src="js/jquery.js"></script>
-        // <script src="js/jquery.mobile.js"></script> -->
-
-<!--         // <script src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg"></script> -->
-      <!-- // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg"></script>        -->
-      <!--&signed_in=true&libraries=visualization&callback=initMap-->
-
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg&signed_in=true&libraries=visualization&callback=initMap"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg&signed_in=true&libraries=visualization&callback=initMap"></script>
 
     </head>
     <body>
@@ -73,10 +66,7 @@
                 <ul>
                     <li class="newsfeed"><a href="#" title="Home"  id="heatMap">Heat Map</a></li>
                     <li class="profile"><a href="#" title="Profile" id="marker">Marker</a></li>
-                    <li class="setting"><a href="#" title="Setting">Setting</a></li>
-                    <li class="logout"><a href="#" title="Logout">Logout</a></li>
-                    <li class="report"><a href="#" title="Report">Report Bug</a></li>
-                    <li class="nfpa"><a href="http://www.nfpa.org/" title="nfpa" target="_blank">National Fire Protection Association</a></li>
+                    <li class="nfpa"><a href="http://www.nfpa.org/safety-information/safety-tip-sheets" title="nfpa" target="_blank">NFPA.org</a></li>
                 </ul>
             </div>
 
@@ -85,42 +75,14 @@
 
             <div class="header" data-role="header">
                 <a href="#panel-01" data-icon="bars" data-iconpos="notext">Menu</a>
-<!--                 <span class="open left"><a href="#panel-01">&#61641;</a></span> -->
-
-<!--                                 <span class="open left"><a href="#panel-01">does this work</a></span> -->
                 <h1><span class="title">Fire Incident Viewer</span></h1>
+<!--                 <a href="popup" data-icon="info" data-transition="none" data-direction="reverse">About</a>  -->
+                
+                <a href="#popup" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-b">About</a>                
             </div>
-
-
- <!--            <div class="panel left" data-role="panel" data-position="left" data-display="ovarlay" id="panel-01">
-                <ul>
-                    <li class="newsfeed"><a href="#" title="Home"  id="heatMap">Heat Map</a></li>
-                    <li class="profile"><a href="#" title="Profile" id="marker">Marker</a></li>
-                    <li class="setting"><a href="#" title="Setting">Setting</a></li>
-                    <li class="logout"><a href="#" title="Logout">Logout</a></li>
-                    <li class="report"><a href="#" title="Report">Report Bug</a></li>
-                    <li class="nfpa"><a href="http://www.nfpa.org/" title="nfpa" target="_blank">National Fire Protection Association</a></li>
-                </ul>
-            </div> -->
-
-
-<!--         <div data-role="header" data-position="fixed" data-tap-toggle="false">
-            <span><h2>Fire Incident Viewer</h2></span>
-        </div> -->
-
- <!--                <h2>Fire Incident Viewer</h2> -->
-    <!--             <div id="deviceready" class="blink">
-                    <p class="event listening">Connecting to Device</p>
-                    <p class="event received">Device is Ready</p>
-                </div> -->
-
-                <div data-role="content">
-
-
-
-
+            <div data-role="content">
                  <div id="map"></div>
-                </div>
+
 
 
 <!-- <form> -->
@@ -130,6 +92,19 @@
         <option value="#">All Structure Fires</option>
         <option value="&heatsource=Cigarette">Cigarettes</option>
         <option value="&heatsource=Candle">Candles</option>
+        <option value="&heatsource=Electrical%20arcing">Electrical Arching</option>
+        <option value="&heatsource=undetermined">Undetermined</option>
+    </select>
+</fieldset>
+<fieldset data-role="controlgroup" data-type="horizontal">
+    <label for="select-native-11">Select A</label>
+    <select name="selectCategory" id="selectCategory">
+        <option value="">-- Category --</option>
+        <option value="&nfirs_incidenttype=111">Building Fire</option>
+        <option value="&nfirs_incidenttype=113">cooking Fire</option>
+        <option value="&nfirs_incidenttype=440">Electrical Wiring / Equipment</option>
+        <option value="&nfirs_incidenttype=441">Short Circuit</option>
+        <option value="&nfirs_incidenttype=445">Arching</option>
     </select>
 </fieldset>
 <fieldset data-role="controlgroup" data-type="horizontal">
@@ -164,8 +139,23 @@
     </select>
 </fieldset>
 
+        <div data-role="popup" id="popup" data-theme="b" data-overlay-theme="b" class="ui-content" data-transition="fade">
+          <a href="#" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+<!--           <img src="../images/pinchzoom.png" alt="pinchzoom" /> -->
+         <p> Fire Incident Viewer Application:</p>
+<p>This application retrieves data from Greensboro’s Open Data portal using the soda API. It can plot various types of fire incidents that have occurred throughout the city.  The google map within the app can either generate a heatmap of fire incidents or a google marker map with information popups on each individual fire incident. </p>
+Features in this app:
+<p>- Google heat mapping and marker maps dynamically displaying data based on various filters (ex. Fire caused by Cigarettes or by Candles or filtering incidents by fire station area.<br>-Links to fire prevention / safety web sites for educational purposes. </p>
+Practical Uses of this app:
+<P>This application can be used by citizens or a fire department to visualize geographically where various fire incidents have occurred throughout the city of Greensboro.  It can be used to find patterns or hot spots where certain fire incidents have occurred. This application can also be used as an educational tool on mapping, fire safety, and geographic data visualization.<p/>
+Future Additions to be added this App:
+<P>In future releases of this application we would like to add more filters so users can retrieve more specific sets of data.  Some filters we would like to add include more incident types, incidents between a start and end date, the fire station that responded to an incident, and response times.<p/>
+Technologies used:
+<p> This is a hybrid application that is built using web technologies including javascript, css, and html. The application can run as either a website or as an application on android devices.  The frameworks used are the Cordova command line interface and jQuery Mobile
+          <p id="popUpText">(tap to close)</p>          
+        </div>
 
-<!-- </form> -->
+
             </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
