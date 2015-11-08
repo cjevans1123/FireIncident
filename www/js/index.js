@@ -232,8 +232,21 @@ function plotIncidentMarkers() {
         } else {
             vPropertyValue = 'Property Value is 0';
         }
+        
+        var displayText = '';
 
-        makeInfoWindowEvent(map, infowindow, vAddress, marker);
+        var adr = vAddress.split(':');
+        adr[1] = '<span style="color:black; text-shadow: none; font-weight: bold;">Address: ' + adr[1] + '<br>' ;
+
+        
+        // var loss[0] = vContentLoss.split(':');
+        // console.log(loss[0]);
+
+        displayText +=  adr[1] + "Content Loss: " + '$' + vContentLoss + '<br>';
+        displayText +=  'Property Value: ' + '$' + vPropertyValue + '</span><br>';
+
+        //makeInfoWindowEvent(map, infowindow, vAddress + " <b>test</b>", marker);
+        makeInfoWindowEvent(map, infowindow, displayText, marker);
     }
 }
 
