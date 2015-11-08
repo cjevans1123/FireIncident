@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+
+        <!-- origional security policy -->
+<!--         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"> -->
+
+        <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline' http://fonts.googleapis.com https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://maps.google.com  https://maps.google.com http://maps.gstatic.com https://maps.gstatic.com http://maps.googleapis.com https://maps.googleapis.com http://*.googleapis.com https://*.googleapis.com http://*.fonts.gstatic.com https://*.fonts.gstatic.com http://*.google.com https://*.google.com http://csi.gstatic.com https://csi.gstatic.com">
+
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <title>Incident Viewer</title>
+
+        <link rel="stylesheet" href="css/themes/jquery.mobile-1.4.5.min.css"> 
+        
+        <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+        <link rel="stylesheet" href="images/icons/dist/jqm-icon-pack-fa.css">
+        
+<!--         <link rel="stylesheet" href="css/style.mobile.css" /> -->
+        <link rel="stylesheet" href="css/index.css">
+
+        
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="js/jquery.ui.map.full.min.js"></script>
+        <script type="text/javascript" src="js/gmap3.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
+        <script type="text/javascript" src="js/jquery.hammer.min.js"></script>        
+        <script type="text/javascript" src="js/modernizr.min.js"></script> 
+        <script type="text/javascript" src="js/spin.min.js"></script>
+<!--         // <script src="js/jquery.js"></script>
+        // <script src="js/jquery.mobile.js"></script> -->
+
+<!--         // <script src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg"></script> -->
+      <!-- // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg"></script>        -->
+      <!--&signed_in=true&libraries=visualization&callback=initMap-->
+
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx31hQ1EOEHt_SgQ5xWBusisEU-NrOxLg&signed_in=true&libraries=visualization&callback=initMap"></script>
+
+    </head>
+    <body>
+        <div data-role="page" id="demo-wrapper" data-theme="b" align="center">
+            <!-- <div class="app"> -->
+            <div class="panel left" data-role="panel" data-position="left" data-display="push" id="panel-01">
+                <ul>
+                    <li class="newsfeed"><a href="#" title="Home"  id="heatMap">Heat Map</a></li>
+                    <li class="profile"><a href="#" title="Profile" id="marker">Marker</a></li>
+                    <li class="nfpa"><a href="http://www.nfpa.org/safety-information/safety-tip-sheets" title="nfpa" target="_blank">NFPA.org</a></li>
+                </ul>
+            </div>
+
+
+            <div>
+
+            <div class="header" data-role="header">
+                <a href="#panel-01" data-icon="bars" data-iconpos="notext">Menu</a>
+<!--                 <span class="open left"><a href="#panel-01">&#61641;</a></span> -->
+
+<!--                                 <span class="open left"><a href="#panel-01">does this work</a></span> -->
+                <h1><span class="title">Fire Incident Viewer</span></h1>
+            </div>
+
+
+ <!--            <div class="panel left" data-role="panel" data-position="left" data-display="ovarlay" id="panel-01">
+                <ul>
+                    <li class="newsfeed"><a href="#" title="Home"  id="heatMap">Heat Map</a></li>
+                    <li class="profile"><a href="#" title="Profile" id="marker">Marker</a></li>
+                    <li class="setting"><a href="#" title="Setting">Setting</a></li>
+                    <li class="logout"><a href="#" title="Logout">Logout</a></li>
+                    <li class="report"><a href="#" title="Report">Report Bug</a></li>
+                    <li class="nfpa"><a href="http://www.nfpa.org/" title="nfpa" target="_blank">National Fire Protection Association</a></li>
+                </ul>
+            </div> -->
+
+
+<!--         <div data-role="header" data-position="fixed" data-tap-toggle="false">
+            <span><h2>Fire Incident Viewer</h2></span>
+        </div> -->
+
+ <!--                <h2>Fire Incident Viewer</h2> -->
+    <!--             <div id="deviceready" class="blink">
+                    <p class="event listening">Connecting to Device</p>
+                    <p class="event received">Device is Ready</p>
+                </div> -->
+
+                <div data-role="content">
+
+
+
+
+                 <div id="map"></div>
+                </div>
+
+
+<!-- <form> -->
+<fieldset data-role="controlgroup" data-type="horizontal">
+    <label for="select-native-11">Select A</label>
+    <select name="selectIncidentType" id="selectIncidentType">
+        <option value="#">All Structure Fires</option>
+        <option value="&heatsource=Cigarette">Cigarettes</option>
+        <option value="&heatsource=Candle">Candles</option>
+    </select>
+</fieldset>
+<fieldset data-role="controlgroup" data-type="horizontal">
+    <label for="select-native-11">Select A</label>
+    <select name="stationSelect" id="stationSelect">
+        <option value="">-- Fire Station --</option>
+        <option value="1">Fire Station 01</option>
+        <option value="2">Fire Station 02</option>
+        <option value="4">Fire Station 04</option>
+        <option value="5">Fire Station 05</option>
+        <option value="7">Fire Station 07</option>
+        <option value="8">Fire Station 08</option>
+        <option value="10">Fire Station 10</option>
+        <option value="11">Fire Station 11</option>
+        <option value="14">Fire Station 14</option>
+        <option value="17">Fire Station 17</option>
+        <option value="18">Fire Station 18</option>
+        <option value="19">Fire Station 19</option>
+        <option value="20">Fire Station 20</option>
+        <option value="21">Fire Station 21</option>
+        <option value="40">Fire Station 40</option>
+        <option value="41">Fire Station 41</option>
+        <option value="43">Fire Station 43</option>
+        <option value="48">Fire Station 48</option>
+        <option value="49">Fire Station 49</option>
+        <option value="52">Fire Station 52</option>                        
+        <option value="53">Fire Station 53</option>
+        <option value="56">Fire Station 56</option>
+        <option value="57">Fire Station 57</option>
+        <option value="59">Fire Station 59</option>
+        <option value="61">Fire Station 61</option>
+    </select>
+</fieldset>
+
+
+<!-- </form> -->
+            </div>
+        </div>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+    </body>
+</html>
